@@ -1,0 +1,1491 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 顶部工具栏 */
+.toolbar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.toolbar h1 {
+    font-size: 20px;
+}
+
+.toolbar-buttons button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-buttons button:hover {
+    background-color: #2980b9;
+}
+
+/* 主工作区域 */
+.workspace {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+}
+
+.divider {
+    height: 2px;
+    background: rgba(255,255,255,0.3);
+    margin: 15px 0;
+    border-radius: 1px;
+}
+
+/* 画布设置区域样式 */
+.canvas-settings {
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.canvas-settings h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.canvas-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.canvas-row-inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.canvas-input-group {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    width: 90px; /* ✅ 确保一行能放下两个 */
+}
+
+.canvas-input-group label {
+    color: #34495e;
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 30px;
+}
+
+.canvas-input-group input {
+    width: 58px;
+    height: 22px;
+    padding: 3px 4px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.canvas-input-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.canvas-apply-btn {
+    height: 32px;
+    padding: 0 16px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+    flex-basis: 100%; /* 添加这一句让按钮独占一行 */
+    width: 100%; /* 添加这一句确保按钮铺满宽度 */
+}
+
+.canvas-apply-btn:hover {
+    background: linear-gradient(135deg, #2980b9, #1f618d);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+}
+
+.canvas-apply-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+/* 分割线样式 */
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #bdc3c7, transparent);
+    margin: 20px 0;
+    position: relative;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: #3498db;
+    border-radius: 2px;
+}
+
+/* 左侧元素面板 */
+.element-panel {
+    width: 200px;
+    background-color: white;
+    border-right: 1px solid #ddd;
+    padding: 15px;
+}
+
+.element-panel h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.element-item {
+    background-color: #ecf0f1;
+    padding: 5px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    cursor: grab;
+    text-align: center;
+    user-select: none;
+    font-size: 12px;
+    white-space: nowrap;  /* 防止文字换行 */
+    text-overflow: ellipsis;  /* 如果文字太长显示省略号 */
+}
+
+.element-item:hover {
+    background-color: #3498db;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.element-item:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+/* 中间画布区域 */
+.canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f1;
+    padding: 20px;
+}
+
+.canvas {
+    width: 800px;
+    height: 600px;
+    background-color: white;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 右侧设置面板 */
+.property-panel {
+    width: 250px;
+    background-color: white;
+    border-right: 1px solid #ddd;
+    padding: 15px;
+}
+
+.property-panel h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+/* 属性组头部（用于展开/收起） */
+.property-group-header {
+    background-color: #f8f9fa;
+    padding: 2px 4px;  /* 减少上下内边距 */
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.property-group-header:hover {
+    background-color: #e9ecef;
+}
+
+.property-group-header h4 {
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    color: #34495e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.property-group-toggle {
+    font-size: 11px;
+    transition: transform 0.2s ease;
+    color: #7f8c8d;
+}
+
+/* 属性组内容区域 */
+.property-group-content {
+    padding: 4px 5px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* 收起状态 */
+.property-group.collapsed .property-group-content {
+    max-height: 0;
+    padding: 0 10px;
+    opacity: 0;
+}
+
+.property-group.collapsed .property-group-toggle {
+    transform: rotate(-90deg);
+}
+
+.property-group {
+    margin-bottom: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.property-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+    gap: 4px;
+}
+
+.property-row label {
+    font-size: 12px;
+    color: #2c3e50;
+    min-width: 65px;
+    width: 120px;
+}
+
+.property-row input {
+    width: 90px;
+    padding: 3px 3px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    font-size: 11px;
+    min-width: 70px;
+}
+
+.property-row select {
+    width: 110px;
+    padding: 3px 3px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+.property-row button {
+    width: 100%;
+    padding: 6px;  /* 从8px减少到6px */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;  /* 从13px减少到12px */
+    transition: opacity 0.3s;
+}
+
+/* 修改原有的 property-group h4 样式，因为现在h4在header中 */
+.property-group-content h4 {
+    margin-bottom: 12px;
+    color: #34495e;
+    font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 1px;
+}
+
+/* 调整大小手柄样式 */
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #3498db;
+  border: 1px solid #2980b9;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.canvas-element.selected .resize-handle {
+  opacity: 1;
+}
+
+.resize-handle:hover {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+  transform: scale(1.2);
+}
+
+/* 画布中的元素样式 */
+.canvas-element {
+    position: absolute;
+    cursor: move;
+    border: 2px solid transparent;
+    user-select: none;
+}
+
+.canvas-element:hover {
+    border-color: #3498db;
+}
+
+.canvas-element.selected {
+    border: 2px solid #e74c3c;
+    box-shadow: 
+        0 0 10px rgba(231, 76, 60, 0.3),
+        0 0 0 2px #007bff;  /* 用box-shadow模拟outline效果 */
+    /* 移除outline相关属性 */
+}
+
+
+/* 删除按钮悬停效果 */
+.delete-btn:hover {
+    background-color: #ff3742 !important;
+    transform: scale(1.1);
+}
+
+/* 基础图形样式 */
+/* 圆形 */
+.circle {
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    border-radius: 50%;
+}
+
+/* 矩形 */
+.rectangle {
+    width: 80px;
+    height: 60px;
+    background-color: #2ecc71;
+    border-radius: 4px;
+}
+
+/* 椭圆形 */
+.oval {
+    width: 100px;
+    height: 60px;
+    background-color: #9b59b6;
+    border-radius: 50%;
+}
+
+/* 三角形 */
+.canvas-element.triangle {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 45px solid #ff9ff3;
+    background: transparent !important;
+    position: relative;
+}
+
+.canvas-element.triangle::after {
+    content: "△";
+    position: absolute;
+    top: 20px;
+    left: -8px;
+    font-size: 12px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* 五边形 */
+.canvas-element.pentagon {
+    width: 50px;
+    height: 50px;
+    background: #54a0ff;
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 六边形 */
+.canvas-element.hexagon {
+    width: 50px;
+    height: 50px;
+    background: #5f27cd;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 菱形 */
+.canvas-element.diamond {
+    width: 50px;
+    height: 50px;
+    background: #feca57;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.canvas-element.diamond::after {
+    content: "◆";
+    transform: rotate(-45deg);
+}
+
+/* 星形 */
+.canvas-element.star {
+    width: 50px;
+    height: 50px;
+    background: #ff6348;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 箭头 */
+.canvas-element.arrow {
+    width: 70px;
+    height: 35px;
+    background: #2ed573;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+}
+
+.canvas-element.arrow::after {
+    content: "";
+    position: absolute;
+    right: -15px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #2ed573;
+}
+
+/* 直线和曲线容器样式 */
+.canvas-element.line,
+.canvas-element.curve {
+    background: transparent !important;
+    border: none !important;
+    padding: 0;
+}
+
+/* 选中状态的边框 */
+.canvas-element.line.selected,
+.canvas-element.curve.selected {
+    outline: 1px dashed #007bff;
+    outline-offset: 2px;
+}
+
+/* 确保SVG不会被拉伸 */
+.canvas-element.line svg,
+.canvas-element.curve svg {
+    pointer-events: none;
+}
+
+/* 线条选中时的特殊样式 */
+.canvas-element.line.selected svg line,
+.canvas-element.curve.selected svg path {
+    stroke-width: 3;
+}
+
+/* 新增元素样式 */
+.element-category {
+    margin-bottom: 20px;
+}
+
+.element-category h4 {
+    margin-bottom: 10px;
+    color: #34495e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 蛋白质 - 更真实的形状和动画 */
+.protein {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 30% 30%, #e74c3c, #c0392b);
+    border-radius: 40% 60% 60% 40%;
+    position: relative;
+    animation: proteinRotate 4s infinite linear;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    background-blend-mode: overlay;
+}
+
+.protein::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 25px;
+    height: 25px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: proteinGlow 2s infinite alternate;
+}
+
+.protein::after {
+    content: '';
+    position: absolute;
+    bottom: 15%;
+    right: 15%;
+    width: 15px;
+    height: 15px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+}
+
+/* 蛋白质旋转动画 */
+@keyframes proteinRotate {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(90deg) scale(1.05); }
+    50% { transform: rotate(180deg) scale(1); }
+    75% { transform: rotate(270deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* 蛋白质发光效果 */
+@keyframes proteinGlow {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.2); }
+}
+
+/* 脂质分子 */
+.lipid {
+    position: relative;
+    width: 14px;
+    height: 100px;
+    background-color: #34495e;
+    border-radius: 8px;
+    animation: lipidFloat 2s infinite ease-in-out;
+}
+
+.lipid::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -6px;
+    width: 26px;
+    height: 26px;
+    background-color: #f39c12;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+/* 离子 - 默认阳离子 */
+.ion {
+    width: 30px;
+    height: 30px;
+    background-color: #1abc9c;
+    border-radius: 50%;
+    border: 3px solid #16a085;
+    position: relative;
+    animation: ionPulse 2s infinite ease-in-out;
+}
+
+.ion::after {
+    content: '+';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* 阴离子变体 */
+.ion-negative {
+    background-color: #e74c3c;
+    border-color: #c0392b;
+}
+
+.ion-negative::after {
+    content: '−';
+    font-size: 16px;
+}
+
+/* 离子脉动动画 */
+@keyframes ionPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* 小分子 */
+.molecule {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background-color: #95a5a6;
+    border-radius: 50%;
+}
+
+.molecule::before,
+.molecule::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+}
+
+.molecule::before {
+    top: -5px;
+    left: 10px;
+}
+
+.molecule::after {
+    bottom: -5px;
+    right: 10px;
+}
+
+/* 膜结构 - 双分子层效果 */
+.membrane {
+    width: 200px;
+    height: 30px;
+    background: linear-gradient(to bottom, 
+        #3498db 0%, #2980b9 20%, 
+        #34495e 20%, #2c3e50 40%,
+        #34495e 40%, #2c3e50 60%,
+        #34495e 60%, #2c3e50 80%,
+        #2980b9 80%, #3498db 100%);
+    border-radius: 15px;
+    position: relative;
+    animation: membraneWave 3s infinite ease-in-out;
+}
+
+.membrane::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 10%;
+    right: 10%;
+    height: 6px;
+    background: rgba(52, 152, 219, 0.6);
+    border-radius: 10px;
+    animation: membraneFlow 2s infinite linear;
+}
+
+.membrane::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 15%;
+    right: 15%;
+    height: 6px;
+    background: rgba(52, 152, 219, 0.4);
+    border-radius: 10px;
+    animation: membraneFlow 2s infinite linear reverse;
+}
+
+/* 膜波动动画 */
+@keyframes membraneWave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.1); }
+}
+
+/* 膜流动动画 */
+@keyframes membraneFlow {
+    0% { transform: translateX(-10px); opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { transform: translateX(10px); opacity: 0.8; }
+}
+
+/* 通道蛋白 */
+.channel {
+    width: 60px;
+    height: 80px;
+    background: radial-gradient(#8e44ad, #6c3483);
+    border-radius: 30px;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    animation: channelBreath 3s infinite ease-in-out;
+}
+
+.channel::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    animation: channelGlow 2s infinite ease-in-out;
+}
+
+@keyframes channelGlow {
+    0%, 100% {
+        opacity: 0.2;
+        transform: translateX(-50%) scaleY(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateX(-50%) scaleY(1.1);
+    }
+}
+
+@keyframes channelBreath {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.2);
+    }
+}
+
+/* 属性面板样式增强 */
+.property-group {
+    border: 1px solid #ecf0f1;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+.property-group h4 {
+    color: #34495e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.property-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.property-row label {
+    font-size: 13px;
+    color: #2c3e50;
+    min-width: 70px;
+}
+
+.property-row input, .property-row select {
+    width: 120px;
+    padding: 4px 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+/* 属性行中的值（span、input、select等） */
+.property-row span {
+    font-size: 13px;  /* 设置span元素的字体大小 */
+    color: #2c3e50;
+    font-family: inherit;  /* 使用相同字体族 */
+}
+
+.property-row button {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.3s;
+}
+
+.property-row button:hover {
+    opacity: 0.8;
+}
+
+/* 更新画布区域布局 */
+.canvas-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #ecf0f1;
+}
+
+.canvas-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 时间轴面板样式 */
+.timeline-panel {
+    height: 200px;
+    background-color: white;
+    border-top: 1px solid #bdc3c7;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-panel h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.timeline-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.timeline-controls button {
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.timeline-controls button:hover {
+    background-color: #7f8c8d;
+}
+
+.timeline {
+    flex: 1;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+}
+
+.timeline-empty {
+    color: #7f8c8d;
+    text-align: center;
+    font-style: italic;
+    margin-top: 30px;
+}
+
+.timeline-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-item-info {
+    flex: 1;
+}
+
+.timeline-item-title {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.timeline-item-details {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: 3px;
+}
+
+.timeline-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.timeline-item button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.timeline-item button:hover {
+    background-color: #c0392b;
+}
+
+/* DNA链 */
+.dna {
+    position: relative;
+    width: 20px;
+    height: 100px;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 1px solid #c0392b;
+    overflow: hidden;
+}
+
+/* 左螺旋 */
+.dna::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        #e74c3c,
+        #e74c3c 6px,
+        transparent 6px,
+        transparent 12px
+    );
+    animation: dnaScroll 3s linear infinite;
+}
+
+/* 右螺旋 */
+.dna::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        -45deg,
+        #3498db,
+        #3498db 6px,
+        transparent 6px,
+        transparent 12px
+    );
+    animation: dnaScroll 3s linear infinite reverse;
+}
+
+/* 动画关键帧 */
+@keyframes dnaScroll {
+    0% {
+        background-position-y: 0;
+    }
+    100% {
+        background-position-y: 24px;
+    }
+}
+
+/* 细胞核 */
+.nucleus {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad, #6c3483);
+    border-radius: 50%;
+    border: 3px solid #5e3370;
+    position: relative;
+    animation: nucleusPulse 4s infinite ease-in-out;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* 核仁 */
+.nucleus::before {
+    content: '';
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    animation: nucleolusFlash 2s infinite ease-in-out;
+}
+
+/* 线粒体 */
+.mitochondria {
+    width: 120px;
+    height: 60px;
+    background: linear-gradient(to right, #e67e22, #d35400);
+    border-radius: 30px;
+    position: relative;
+    border: 2px solid #b34700;
+    box-shadow: inset 0 0 8px rgba(255,255,255,0.2);
+}
+
+.mitochondria::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 8px,
+        rgba(255,255,255,0.3) 8px,
+        rgba(255,255,255,0.3) 12px
+    );
+    border-radius: 20px;
+    animation: mitoFlow 2s infinite linear;
+}
+
+
+/* 载体蛋白 */
+.carrier {
+    width: 40px;
+    height: 100px;
+    background: linear-gradient(to bottom, #2ecc71 0%, #27ae60 50%, #2ecc71 100%);
+    border-radius: 20px;
+    position: relative;
+}
+
+.carrier::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 40px;
+    background-color: rgba(255,255,255,0.4);
+    border-radius: 8px;
+}
+
+/* 圆形动画：呼吸脉动 */
+.circle {
+    animation: circlePulse 2s infinite ease-in-out;
+}
+
+@keyframes circlePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.85;
+    }
+}
+
+/* 矩形动画：上下浮动 */
+.rectangle {
+    animation: rectangleFloat 3s infinite ease-in-out;
+}
+
+@keyframes rectangleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 椭圆动画：弹性缩放 */
+.oval {
+    animation: ovalStretch 4s infinite ease-in-out;
+}
+
+@keyframes ovalStretch {
+    0%, 100% {
+        transform: scaleX(1) scaleY(1);
+    }
+    25% {
+        transform: scaleX(1.2) scaleY(0.9);
+    }
+    50% {
+        transform: scaleX(0.9) scaleY(1.2);
+    }
+    75% {
+        transform: scaleX(1.1) scaleY(0.95);
+    }
+}
+
+@keyframes dnaTwist {
+    0% { transform: rotate(0deg) scaleX(1); }
+    25% { transform: rotate(3deg) scaleX(1.05); }
+    50% { transform: rotate(0deg) scaleX(1); }
+    75% { transform: rotate(-3deg) scaleX(1.05); }
+    100% { transform: rotate(0deg) scaleX(1); }
+}
+
+/* 小分子 - 弹跳漂浮 */
+.molecule {
+    animation: moleculeBounce 2.5s infinite ease-in-out;
+}
+
+@keyframes moleculeBounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.1);
+    }
+}
+
+/* 脂质分子 - 上下浮动模拟膜流动 */
+.lipid {
+    animation: lipidFloat 2s infinite ease-in-out;
+}
+
+@keyframes lipidFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* 载体蛋白 - 呼吸缩放 + 内部闪烁 */
+.carrier {
+    animation: carrierBreath 3s infinite ease-in-out;
+}
+
+.carrier::before {
+    animation: carrierFlash 1.5s infinite alternate;
+}
+
+@keyframes carrierBreath {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes carrierFlash {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
+}
+
+/* 细胞核 - 脉动 + 色彩呼吸 */
+.nucleus {
+    animation: nucleusPulse 4s infinite ease-in-out;
+}
+
+/* 外部发光动画 */
+@keyframes nucleusPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.06);
+        filter: brightness(1.15);
+    }
+}
+
+/* 核仁闪动 */
+@keyframes nucleolusFlash {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* 线粒体 - 内部线条流动（模拟能量产生） */
+.mitochondria::before {
+    animation: mitoFlow 2.5s infinite linear;
+}
+
+@keyframes mitoFlow {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(10px); }
+}
+
+
+.dna .base-pair {
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: #2c3e50;
+    left: 2px;
+    animation: basePairWiggle 1.5s infinite ease-in-out;
+    transform-origin: center center;
+}
+
+@keyframes basePairWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(10deg); }
+}
+
+/* =============== 可收起展开面板样式 =============== */
+
+/* 面板头部样式 */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #3498db;
+    margin-bottom: 15px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+/* 面板收起按钮 */
+.collapse-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.collapse-btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+/* 面板内容区域 */
+.panel-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* 收起状态的面板 */
+.element-panel.collapsed {
+    width: 50px;
+    position: relative;
+}
+
+.property-panel.collapsed {
+    width: 50px;
+    position: relative;
+}
+
+.collapsed .panel-content {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.collapsed .panel-header {
+    writing-mode: vertical-rl;
+    height: 100%;
+    margin: 0;
+    padding: 30px 0 15px 0;
+    width: 100%;
+}
+
+.collapsed .panel-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    display: inline-block; /* 确保能被text-align影响 */
+}
+
+/* 收起按钮在收起状态下的样式 */
+.collapsed .collapse-btn {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+}
+
+/* =============== 分类收起展开样式 =============== */
+
+/* 分类头部样式 */
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.category-header:hover {
+    background-color: #d5dbdb;
+}
+
+.category-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+.category-toggle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #7f8c8d;
+    transition: transform 0.3s ease;
+}
+
+/* 分类内容区域 */
+.category-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* 两列等宽 */
+    gap: 6px;  /* 元素之间的间距 */
+    padding: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* 收起状态的分类 */
+.element-category.collapsed .category-content {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 5px;
+}
+
+.element-category.collapsed .category-toggle {
+    transform: rotate(90deg);
+}
+
+/* =============== 设置区域收起展开样式 =============== */
+
+/* 设置区域样式 */
+.settings-section {
+    margin-bottom: 20px;
+    border: 1px solid #ecf0f1;
+    border-radius: 6px;
+    background-color: #fafafa;
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.section-header:hover {
+    background-color: #e8f4f8;
+}
+
+.section-header h4 {
+    margin: 0;
+    color: #34495e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.section-toggle {
+    font-size: 14px;
+    font-weight: bold;
+    color: #7f8c8d;
+    transition: transform 0.3s ease;
+}
+
+/* 设置内容区域 */
+.section-content {
+    padding: 15px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* 收起状态的设置区域 */
+.settings-section.collapsed .section-content {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 15px;
+}
+
+.settings-section.collapsed .section-toggle {
+    transform: rotate(90deg);
+}
+
+.settings-section.collapsed .section-header {
+    border-bottom: none;
+}
+
+/* =============== 画布区域自适应 =============== */
+
+/* 当面板收起时，画布区域自动扩展 */
+.canvas-section {
+    transition: all 0.3s ease;
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+    .element-panel, .property-panel {
+        width: 180px;
+    }
+    
+    .element-panel.collapsed, .property-panel.collapsed {
+        width: 55px;
+    }
+}

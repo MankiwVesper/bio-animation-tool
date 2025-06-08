@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物动态示意图制作工具</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- 顶部工具栏 -->
+        <header class="toolbar">
+            <h1>生物动画制作器</h1>
+            <div class="toolbar-buttons">
+                <button id="playBtn">播放</button>
+                <button id="pauseBtn">暂停</button>
+                <button id="resetBtn">重置</button>
+            </div>
+        </header>
+
+        <!-- 主要工作区域 -->
+        <main class="workspace">
+            <!-- 左侧元素库 -->
+            <aside class="element-panel">
+                <div class="panel-header">
+                    <h3>元素库</h3>
+                    <button class="collapse-btn" onclick="togglePanel('element-panel')">−</button>
+                </div>
+                <div class="panel-content">
+                    <div class="element-list">
+                        <div class="element-category">
+                            <div class="category-header" onclick="toggleCategory(this)">
+                                <h4>基础形状</h4>
+                                <span class="category-toggle">−</span>
+                            </div>
+                            <div class="category-content">
+                                <div class="element-item" data-type="circle" draggable="true">圆形</div>
+                                <div class="element-item" data-type="rectangle" draggable="true">矩形</div>
+                                <div class="element-item" data-type="oval" draggable="true">椭圆</div>
+                                <div class="element-item" data-type="triangle" draggable="true">三角形</div>
+                                <div class="element-item" data-type="pentagon" draggable="true">五边形</div>
+                                <div class="element-item" data-type="hexagon" draggable="true">六边形</div>
+                                <div class="element-item" data-type="diamond" draggable="true">菱形</div>
+                                <div class="element-item" data-type="star" draggable="true">星形</div>
+                                <div class="element-item" data-type="arrow" draggable="true">箭头</div>
+                                <div class="element-item" data-type="line" draggable="true">直线</div>
+                                <div class="element-item" data-type="curve" draggable="true">曲线</div>
+                            </div>
+                        </div>
+
+                        <div class="element-category">
+                            <div class="category-header" onclick="toggleCategory(this)">
+                                <h4>生物分子</h4>
+                                <span class="category-toggle">−</span>
+                            </div>
+                            <div class="category-content">
+                                <div class="element-item" data-type="protein" draggable="true">蛋白质</div>
+                                <div class="element-item" data-type="lipid" draggable="true">脂质分子</div>
+                                <div class="element-item" data-type="ion" draggable="true">离子</div>
+                                <div class="element-item" data-type="molecule" draggable="true">小分子</div>
+                                <div class="element-item" data-type="dna" draggable="true">DNA链</div>
+                                <div class="element-item" data-type="carrier" draggable="true">载体蛋白</div>
+                            </div>
+                        </div>
+
+                        <div class="element-category">
+                            <div class="category-header" onclick="toggleCategory(this)">
+                                <h4>细胞结构</h4>
+                                <span class="category-toggle">−</span>
+                            </div>
+                            <div class="category-content">
+                                <div class="element-item" data-type="membrane" draggable="true">膜结构</div>
+                                <div class="element-item" data-type="channel" draggable="true">通道蛋白</div>
+                                <div class="element-item" data-type="nucleus" draggable="true">细胞核</div>
+                                <div class="element-item" data-type="mitochondria" draggable="true">线粒体</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 中间画布区域 -->
+            <section class="canvas-section">
+                <div class="canvas-area">
+                    <div id="canvas" class="canvas">
+                        <!-- 动画元素将在这里添加 -->
+                    </div>
+                </div>
+
+                <!-- 时间轴面板 -->
+                <div class="timeline-panel">
+                    <h3>动画时间轴</h3>
+                    <div class="timeline-controls">
+                        <button id="clearTimelineBtn">清空时间轴</button>
+                        <button id="playTimelineBtn">播放时间轴</button>
+                    </div>
+                    <div id="timeline" class="timeline">
+                        <p class="timeline-empty">时间轴为空，请添加动画</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右侧属性面板 -->
+            <aside class="property-panel">
+                <div class="panel-header">
+                    <h3>设置面板</h3>
+                    <button class="collapse-btn" onclick="togglePanel('property-panel')">−</button>
+                </div>
+                <div class="panel-content">
+                    <div class="settings-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4>画布设置</h4>
+                            <span class="section-toggle">−</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="canvas-row-inputs">
+                                <div class="canvas-input-group">
+                                    <label for="canvasWidth">宽度</label>
+                                    <input type="number" id="canvasWidth" value="800" min="400" max="1200" step="10">
+                                </div>
+                                <div class="canvas-input-group">
+                                    <label for="canvasHeight">高度</label>
+                                    <input type="number" id="canvasHeight" value="400" min="300" max="800" step="10">
+                                </div>
+                            </div>
+                            <button id="resizeCanvas" class="canvas-apply-btn">应用</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="section-header" onclick="toggleSection(this)">
+                            <h4>属性设置</h4>
+                            <span class="section-toggle">−</span>
+                        </div>
+                        <div class="section-content">
+                            <div id="properties">
+                                <p>选择一个元素来编辑属性</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
